@@ -1,0 +1,8 @@
+{
+    "titulo": "Desenvolver a tela de login",
+    "descricao": "Criar a interface de autenticação utilizando React e Tailwind",
+    "responsavel": {
+        "id": 3,
+        "nome": "Carlos Silva"
+    }
+}
