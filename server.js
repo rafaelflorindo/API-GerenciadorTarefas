@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require('cors');
 
@@ -34,7 +35,7 @@ app.get("/tarefas/:id", (req, res)=>{
     const tarefa = dbTarefa.find(t => t.id === id);
 
     if (tarefa) {
-        res.status(200).json(tarefa);
+        res.status(200).json({'idBusca': id, tarefa});
     } else {
         res.status(404).json({ mensagem: "Tarefa não encontrada" });
     }
@@ -106,7 +107,7 @@ app.put("/tarefas/:id", (req, res) => {
         data_atualizacao: dataAtual
     };
 
-    return res.status(200).json({
+    return res.status(200).json({'idBusca': id, 
         mensagem: "Tarefa atualizada com sucesso!",
         tarefa: dbTarefa[index]
     });
@@ -134,6 +135,15 @@ app.delete("/tarefas/:id", (req, res) => {
     });
 });
 
-app.listen(3000, function() {
-    console.log("Servidor rodando em http://localhost:3000");
-});
+
+const port = process.env.PORT || 3000; 
+
+// Apenas altere o final para o padrão Serverless / Vercel:
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, function() {
+        console.log(`Servidor rodando em http://localhost:${port}`);
+    });
+}
+
+// Exporta o app para a Vercel conseguir lidar com as requisições
+module.exports = app;

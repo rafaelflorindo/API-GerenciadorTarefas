@@ -1,7 +1,7 @@
 {
   "name": "api-gerenciadortarefas",
   "version": "1.0.0",
-  "description": "",
+  "description": "API de tarefas",
   "license": "ISC",
   "author": "Rafael Alves Florindo",
   "type": "commonjs",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1"
   }
 }
