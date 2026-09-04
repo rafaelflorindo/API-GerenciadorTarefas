@@ -1,38 +1,16 @@
-require('dotenv').config();
-const express = require("express");
-const cors = require('cors');
+const dbTarefa = require("../../Mook/tarefas.js");
 
-const tarefaRoutes = require('./src/routes/tarefaRoutes.js');
-
-const app = express(); 
-app.use(express.json())
-app.use(cors());
-
-//const dbTarefa = require("./Mook/tarefas.js"); 
-
-app.get("/", (req, res) => {
-    res.status(200).json({
-        mensagem: "Página inicial da API de Tarefas"
-    })
-}); 
-
-// Usando as rotas de tarefas
-app.use(tarefaRoutes);
-
-/** -----------LIST------------- 
- * 
-app.get("/tarefas", (req, res) => {
+// Listar todas as tarefas
+const listarTarefas = (req, res) => {
     if (dbTarefa.length > 0) {
-        res.status(200).json(dbTarefa);
+        return res.status(200).json(dbTarefa);
     } else {
-        res.status(404).json({ mensagem: "Lista de tarefas está vazia" });
-    } 
-}); 
+        return res.status(404).json({ mensagem: "Lista de tarefas está vazia" });
+    }
+};
 
-/** -----------LIST BY ID------------- 
- * 
-app.get("/tarefas/:id", (req, res)=>{
-
+// Buscar tarefa por ID
+const buscarPorId = (req, res) => {
     const id = Number(req.params.id);
 
     if (isNaN(id)) {
@@ -42,15 +20,14 @@ app.get("/tarefas/:id", (req, res)=>{
     const tarefa = dbTarefa.find(t => t.id === id);
 
     if (tarefa) {
-        res.status(200).json({'idBusca': id, tarefa});
+        return res.status(200).json({ idBusca: id, tarefa });
     } else {
-        res.status(404).json({ mensagem: "Tarefa não encontrada" });
+        return res.status(404).json({ mensagem: "Tarefa não encontrada" });
     }
-})
+};
 
-/** -----------CREATE------------- 
- * 
-app.post("/tarefas", (req, res) => {
+// Criar nova tarefa
+const criarTarefa = (req, res) => {
     const { titulo, descricao, responsavel } = req.body;
 
     if (!titulo || !descricao) {
@@ -83,11 +60,10 @@ app.post("/tarefas", (req, res) => {
         mensagem: "Tarefa criada com sucesso!",
         tarefa: novaTarefa
     });
-});
+};
 
-/** -----------UPDATE------------- 
- * 
-app.put("/tarefas/:id", (req, res) => {
+// Atualizar tarefa
+const atualizarTarefa = (req, res) => {
     const id = Number(req.params.id);
 
     if (isNaN(id)) {
@@ -116,15 +92,15 @@ app.put("/tarefas/:id", (req, res) => {
         data_atualizacao: dataAtual
     };
 
-    return res.status(200).json({'idBusca': id, 
+    return res.status(200).json({
+        idBusca: id, 
         mensagem: "Tarefa atualizada com sucesso!",
         tarefa: dbTarefa[index]
     });
-});
+};
 
-/** -----------DELETE------------- 
- * 
-app.delete("/tarefas/:id", (req, res) => {
+// Deletar tarefa
+const deletarTarefa = (req, res) => {
     const id = Number(req.params.id);
 
     if (isNaN(id)) {
@@ -143,21 +119,12 @@ app.delete("/tarefas/:id", (req, res) => {
         mensagem: "Tarefa removida com sucesso!",
         tarefa: tarefaRemovida[0]
     });
-});
-*/
+};
 
-//Rota para quando a página NÃO EXISTE (Erro 404)
-app.use((req, res) => {
-  res.status(404).send('Essa rota não existe!');
-});
-
-const port = process.env.PORT || 3000; 
-
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(port, function() {
-        console.log(`Servidor rodando em http://localhost:${port}`);
-    });
-}
-
-// Exporta o app para a Vercel conseguir lidar com as requisições
-module.exports = app;
+module.exports = {
+    listarTarefas,
+    buscarPorId,
+    criarTarefa,
+    atualizarTarefa,
+    deletarTarefa
+};
